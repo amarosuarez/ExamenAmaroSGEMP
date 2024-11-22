@@ -1,0 +1,51 @@
+﻿@model UI.Models.VM.clsListadoMisionesCandidatoVM
+
+<div class="container">
+    <form method="post" class="mb-3">
+        @Html.LabelFor(m => m.Id, "Selecciona una Misión:")
+        @Html.DropDownListFor(m => m.Id,
+                 new SelectList(Model.Misiones, "Id", "Nombre"),
+                 "Seleccione una misión",
+                 new { @class = "form-control text-center mt-4" })
+
+        <input type="submit" class="btn btn-primary mt-2" style="width: 100%" value="Ver Candidatos">
+    </form>
+
+    @if (Model.Candidatos != null && Model.Candidatos.Count > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Apellidos
+                    </th>
+                    <th>
+                        Edad
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Candidatos)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nombre)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Apellidos)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Edad)
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.Id">Ver detalles</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

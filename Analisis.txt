@@ -1,0 +1,96 @@
+ENT
+--------------------------
+	clsMision:
+		- id: int {get; set;}
+		- nombre: string {get;set;}
+		- dificultad: int {get;set;}
+
+	clsCandidato:
+		- id: int {get;set;}
+		- nombre: string {get;set;}
+		- apellidos: string {get;set;}
+		- direccion: string {get;set;}
+		- pais: string {get;set;}
+		- telefono: string {get;set;}
+		- fechaNac: DateTime {get;set;}
+		- precioMedio: int {get;set;}
+		- edad: int {get;}
+
+		public int getEdad() {}
+DAL
+-------------------------
+	clsListadoMisionDAL:
+		- private static List<clsMision> misiones
+
+		public static List<clsMision> obtenerListadoMisionesDAL() {}
+
+		public static clsMision obtenerMisionPorIdDAL(int id) {}
+
+		public static List<clsCandidato> candidatosValidosParaMision(int idMision) {}
+
+	clsListadoCandidatoDAL:
+		- internal static List<clsCandidato> candidatos
+
+		public static List<clsCandidato> obtenerListadoCandidatosDAL() {}
+
+		public static clsCandidato obtenerCandidatoPorIdDAL(int id) {}
+
+BL
+-------------------------
+	clsListadoMisionDBL:
+		public static List<clsMision> obtenerListadoMisionesBL() {}
+
+		public static clsMision obtenerMisionPorIdBL(int id) {}
+
+		public static List<clsCandidato> candidatosValidosParaMision(int idMision) {
+			// Aquí aplicaría las reglas impuestas por el mismísimo Tony (dependiendo de la dificultad de la misión y el país del candidato)
+		}
+
+	clsListadoCandidatoBL:
+		public static List<clsCandidato> obtenerListadoCandidatosBL() {}
+
+		public static clsCandidato obtenerCandidatoPorIdBL(int id) {}
+
+UI
+-------------------------
+	VM:
+		clsListadoMisionesCandidatoVM : clsMision
+			- private listadoMisiones: List<clsMision>
+			- private listadoCandidatos: List<clsCandidato>
+
+			public clsListadoMisionesCandidatoVM() {
+				listadoMisiones = clsListadoMisionBL.obtenerListadoMisionesBL()
+			}
+
+			public clsListadoMisionesCandidatoVM(int idMision) : this() {
+				clsMision mision = clsListadoMisionBL.obtenerMisionPorId(id)
+				if (mision != null) {
+					listadoCandidatos = clsListadoMisionBL.candidatosValidosParaMision(idMision)
+					// Da los datos a la mision
+					// this.id = id...
+				}
+			}
+
+	Controller:
+		Index():
+			// Habría try catch
+			clsListadoMisionesCandidatoVM vm = new clsListadoMisionesCandidatoVM()
+			return View(vm)
+
+		[HttpPost]
+		Index(int id):
+			// Habría try catch
+			clsListadoMisionesCandidatoVM vm = new clsListadoMisionesCandidatoVM(id)
+			return View(vm)
+
+		Details(int id):
+			// Habría try catch
+			clsCandidato candidato = clsListadoCandidatoBL.obtenerCandidatoPorIdBL(id)
+			return View(candidato)
+
+	VIEWS:
+		Index:
+			// Aqui se muestra el listado de las misiones y cuando seleccione una misión, el listado de candidatos
+
+		Details:
+			// Aquí se muestra los datos del candidato a contactar
